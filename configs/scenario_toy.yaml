@@ -1,0 +1,9 @@
+S: 2
+C: 5
+K: 10
+M: 10
+H_per_cell: 2
+demand_base_high_mbps: 50.0
+demand_base_low_mbps: 10.0
+mismatch_ratio: 0.3
+seed: 0

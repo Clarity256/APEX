@@ -1,0 +1,10 @@
+freq_Hz: 2000000000.0
+bandwidth_Hz: 30000000.0
+W_PRB_Hz: 180000.0
+N0_W_per_Hz: 4.0e-21
+P_sat_max_W: 1000.0
+G_tx_dBi: 30.0
+G_rx_dBi: 0.0
+T_fast_slot_s: 0.01
+eps: 0.0001
+lambda_h: 0.1
