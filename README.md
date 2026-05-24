@@ -26,6 +26,7 @@ The current codebase is organized around a staged optimization pipeline:
 | P1-L2 | Dual decomposition | Fast approximation to the P1 convex benchmark | Implemented and benchmarked |
 | P2-L1 | Offline association MILP | Satellite-cell association with hard per-cell handover budgets | Implemented with SciPy HiGHS |
 | P2-L2 | Rolling-window decomposition | Medium-horizon association via repeated MILP subproblems | Implemented |
+| P2-L3 | Dynamic programming | Large-horizon separable hard-budget association | Implemented |
 | P3 | Online hierarchical policy | Scheduling under demand uncertainty | Planned |
 
 ## Results Snapshot
@@ -58,6 +59,7 @@ Latest committed benchmark summaries:
 | P1 medium overloaded, 50 instances | median gap `3.76e-4`, p95 gap `1.09e-2`, median speedup `71.9x` |
 | P2 toy, seed 0 | optimal, total handovers `5`, max per-cell handovers `1 / 2` |
 | P2 medium, seed 0 | optimal, total handovers `10`, max per-cell handovers `1 / 3` |
+| P2 stress L1/L2/L3, 3 instances | DP gap `0`, DP median speedup `5.4x`, rolling median speedup `1.7x` |
 
 ## Quick Start
 
@@ -110,7 +112,7 @@ Run the P2 synthetic association experiment:
 .venv/bin/python scripts/run_p2_experiments.py --scale medium --method rolling --window 5 --step 3
 ```
 
-Run the generated-scenario P2 L1-vs-L2 benchmark:
+Run the generated-scenario P2 L1/L2/L3 benchmark:
 
 ```bash
 .venv/bin/python scripts/run_p2_benchmark.py --scale stress --instances 3

@@ -39,6 +39,9 @@ def test_run_p2_benchmark_script_smoke(tmp_path: Path) -> None:
     summary = json.loads(summaries[0].read_text(encoding="utf-8"))
     assert summary["scenario"] == "p2_toy"
     assert summary["instances"] == 2
-    assert "gap_median" in summary
-    assert "speedup_median" in summary
+    assert "rolling_gap_median" in summary
+    assert "dp_gap_median" in summary
+    assert "rolling_speedup_median" in summary
+    assert "dp_speedup_median" in summary
     assert summary["rolling_handover_total_mean"] >= 0.0
+    assert summary["dp_handover_total_mean"] >= 0.0
