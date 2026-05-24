@@ -12,7 +12,11 @@
 
 ## 当前仓库状态
 
-当前仓库只有 `doc/` 设计文档与 `doc/paper/` 参考论文，尚未初始化 `src/`、`tests/`、`scripts/`、`configs/` 等实现目录。`01_system_architecture.md` 中的目录树是目标代码结构，不代表这些文件已经存在。开始写代码前应先按该架构创建最小项目骨架。
+当前仓库已经完成 P1/P2 研究原型的主要实现：`src/` 下包含 P1
+凸优化/对偶求解器、P2 MILP/rolling/DP 求解器和场景生成模块，`tests/`
+包含对应回归测试，`scripts/` 包含可复现实验入口。早期 `02_`、`03_`
+规格文档仍保留原始设计语境；实际可运行状态以根目录 `README.md` 和
+`doc/reports/` 技术报告为准。
 
 ```
 doc/
@@ -25,8 +29,14 @@ doc/
 ├── 05_experiment_design.md         实验场景、参数、评估指标
 ├── 06_coding_conventions.md        代码规范与项目结构
 ├── 07_vibe_coding_guide.md         AI 协作开发方法论
-└── 08_environment_setup.md         环境配置与手动安装项
+├── 08_environment_setup.md         环境配置与手动安装项
+└── reports/                        P1/P2 当前实现技术报告
 ```
+
+## 当前技术报告
+
+- `reports/p1_technical_report.md` — P1 凸优化内核与对偶加速结论
+- `reports/p2_technical_report.md` — P2 硬切换预算归属优化结论
 
 ## 推荐阅读顺序
 

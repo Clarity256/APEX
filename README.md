@@ -130,6 +130,7 @@ src/leo_alloc/
     p1_dual.py     # L2 dual decomposition approximation
     p2_milp.py     # P2 offline MILP association solver
     p2_rolling.py  # P2 rolling-window decomposition solver
+    p2_dp.py       # P2 dynamic programming solver for separable surrogate
   scenario/        # validated generated scenarios and channel/visibility models
   rl/              # P3 online policy components, planned
   utils/           # configuration and logging helpers
@@ -164,7 +165,8 @@ handover constraints, P2 rolling-window boundaries, and experiment-script smoke 
 ## Roadmap
 
 - Benchmark P2-L1 vs P2-L2 across larger orbit-driven scenarios.
-- Add P2-L3 large-scale heuristic and stronger baselines.
+- Calibrate the P2 capacity proxy against the P1 CVX oracle.
+- Benchmark P2-L1/L2/L3 across larger orbit-driven scenarios.
 - Connect P2 labels to P3 imitation-learning data generation.
 - Implement the online hierarchical RL policy and evaluate demand uncertainty.
 - Produce paper-scale experiment tables and figures from reproducible scripts.
