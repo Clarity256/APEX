@@ -1,0 +1,32 @@
+{
+  "scenario": "medium_overloaded",
+  "solver": "MOSEK",
+  "use_dpp": false,
+  "config": {
+    "S": 4,
+    "C": 10,
+    "M": 20,
+    "N_PRB": 100.0,
+    "P_max": 100.0,
+    "W_PRB": 180000.0,
+    "N0": 1e-15,
+    "T_f": 0.01,
+    "eps": 0.0001,
+    "demand_low_bits": 1000.0,
+    "demand_high_bits": 20000.0,
+    "channel_low": 8e-14,
+    "channel_high": 1.6e-12
+  },
+  "instances": 50,
+  "gap_median": 0.00037637015523433207,
+  "gap_p95": 0.010909273168297587,
+  "gap_max": 0.012874954749499705,
+  "speedup_median": 71.90057359602378,
+  "speedup_p05": 19.595342433462857,
+  "cvx_time_median_s": 0.12797952099936083,
+  "dual_time_median_s": 0.0014916460058884695,
+  "cvx_xi_mean": 0.13592280255931613,
+  "dual_xi_mean": 0.13534088475974776,
+  "cvx_xi_min_mean": 0.002382830530033214,
+  "dual_xi_min_mean": 0.0023680059883885
+}
