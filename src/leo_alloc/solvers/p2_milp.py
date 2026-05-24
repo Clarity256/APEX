@@ -320,10 +320,9 @@ def _capacity_proxy(data: _P2Data) -> FloatArray:
     snr = data.g * power_per_prb[:, None, None] / (data.W_PRB * data.N0)
     exclusive_bits = data.T_f * data.M * data.W_PRB * data.N_PRB[:, None, None]
     exclusive_bits = exclusive_bits * np.log2(1.0 + np.maximum(snr, 0.0))
-    fair_bits = exclusive_bits / expected_load
     proxy = np.ones((data.S, data.C, data.K), dtype=np.float64)
     positive = demand > 0.0
-    proxy[:, positive] = np.minimum(fair_bits[:, positive] / demand[positive], 1.0)
+    proxy[:, positive] = np.minimum(exclusive_bits[:, positive] / expected_load[:, positive], 1.0)
     return np.asarray(np.clip(proxy * data.v, 0.0, 1.0), dtype=np.float64)
 
 

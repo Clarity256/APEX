@@ -1,0 +1,17 @@
+{
+  "scale": "medium",
+  "scenario_id": "p2_medium_seed0",
+  "seed": 0,
+  "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "objective": -540.9579036043141,
+  "solve_time_s": 0.008375959005206823,
+  "mip_gap": 0.0,
+  "handover_total": 10.0,
+  "handover_max_per_cell": 1.0,
+  "budget_max_per_cell": 3.0,
+  "xi_min": 0.002856674727766493,
+  "xi_mean": 0.013361696809581113,
+  "xi_max": 0.039460043467206815,
+  "arrays_path": "results/p2_runs/p2_medium_seed0_20260524T045316Z.npz",
+  "plot_path": "results/p2_runs/p2_medium_seed0_20260524T045316Z.png"
+}
