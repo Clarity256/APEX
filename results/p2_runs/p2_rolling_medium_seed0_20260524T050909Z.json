@@ -1,0 +1,20 @@
+{
+  "method": "rolling",
+  "scale": "medium",
+  "scenario_id": "p2_medium_seed0",
+  "seed": 0,
+  "status": "rolling_optimal windows=4",
+  "objective": -540.0594827401969,
+  "solve_time_s": 0.019369916000869125,
+  "mip_gap": 0.0,
+  "handover_total": 11.0,
+  "handover_max_per_cell": 2.0,
+  "budget_max_per_cell": 3.0,
+  "xi_min": 0.002856674727766493,
+  "xi_mean": 0.013457748649029858,
+  "xi_max": 0.039460043467206815,
+  "arrays_path": "/Users/clarity256/Documents/Code/Satellite/v1/results/p2_runs/p2_rolling_medium_seed0_20260524T050909Z.npz",
+  "plot_path": "/Users/clarity256/Documents/Code/Satellite/v1/results/p2_runs/p2_rolling_medium_seed0_20260524T050909Z.png",
+  "window": 5,
+  "step": 3
+}

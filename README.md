@@ -24,7 +24,8 @@ The current codebase is organized around a staged optimization pipeline:
 |---|---|---|---|
 | P1-L1 | Convex PRB-power allocation | Ground-truth resource allocation under fixed association | Implemented with CVXPY |
 | P1-L2 | Dual decomposition | Fast approximation to the P1 convex benchmark | Implemented and benchmarked |
-| P2 | Offline association MILP | Satellite-cell association with hard per-cell handover budgets | Initial HiGHS MILP implemented |
+| P2-L1 | Offline association MILP | Satellite-cell association with hard per-cell handover budgets | Implemented with SciPy HiGHS |
+| P2-L2 | Rolling-window decomposition | Medium-horizon association via repeated MILP subproblems | Implemented |
 | P3 | Online hierarchical policy | Scheduling under demand uncertainty | Planned |
 
 ## Results Snapshot
@@ -106,6 +107,7 @@ Run the P2 synthetic association experiment:
 ```bash
 .venv/bin/python scripts/run_p2_experiments.py --scale toy --seed 0
 .venv/bin/python scripts/run_p2_experiments.py --scale medium --seed 0
+.venv/bin/python scripts/run_p2_experiments.py --scale medium --method rolling --window 5 --step 3
 ```
 
 Artifacts are written under `results/` as JSON summaries, compressed NumPy
@@ -119,6 +121,7 @@ src/leo_alloc/
     p1_cvx.py      # L1 CVXPY convex allocation kernel
     p1_dual.py     # L2 dual decomposition approximation
     p2_milp.py     # P2 offline MILP association solver
+    p2_rolling.py  # P2 rolling-window decomposition solver
   scenario/        # scenario interfaces and future generators
   rl/              # P3 online policy components, planned
   utils/           # configuration and logging helpers
@@ -147,11 +150,12 @@ doc/
 ```
 
 The test suite currently covers P1 convex correctness, P1 dual behavior, P2 MILP
-handover constraints, and experiment-script smoke tests.
+handover constraints, P2 rolling-window boundaries, and experiment-script smoke tests.
 
 ## Roadmap
 
-- Harden P2 against larger orbit-driven scenarios and add stronger baselines.
+- Benchmark P2-L1 vs P2-L2 across larger orbit-driven scenarios.
+- Add P2-L3 large-scale heuristic and stronger baselines.
 - Connect P2 labels to P3 imitation-learning data generation.
 - Implement the online hierarchical RL policy and evaluate demand uncertainty.
 - Produce paper-scale experiment tables and figures from reproducible scripts.

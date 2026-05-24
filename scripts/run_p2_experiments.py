@@ -13,7 +13,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-from leo_alloc.solvers import P2MILPSolver, P2Result
+from leo_alloc.solvers import P2MILPSolver, P2Result, P2RollingSolver
 from leo_alloc.utils.logging import get_logger
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -63,10 +63,13 @@ def parse_args() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scale", choices=["toy", "medium"], default="toy")
+    parser.add_argument("--method", choices=["milp", "rolling"], default="milp")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--time-limit", type=float, default=60.0)
     parser.add_argument("--mip-gap", type=float, default=0.01)
+    parser.add_argument("--window", type=int, default=5)
+    parser.add_argument("--step", type=int, default=3)
     parser.add_argument("--no-plot", action="store_true", help="Skip writing the PNG plot.")
     return parser.parse_args()
 
@@ -178,14 +181,18 @@ def write_arrays(path: Path, scenario: SyntheticP2Scenario, result: P2Result) ->
 
 
 def summary_dict(
+    method: str,
     scale: str,
     scenario: SyntheticP2Scenario,
     result: P2Result,
     arrays_path: Path,
     plot_path: Path | None,
+    window: int | None = None,
+    step: int | None = None,
 ) -> dict[str, Any]:
     """Build a JSON-serializable P2 experiment summary."""
-    return {
+    summary = {
+        "method": method,
         "scale": scale,
         "scenario_id": scenario.scenario_id,
         "seed": scenario.seed,
@@ -202,6 +209,11 @@ def summary_dict(
         "arrays_path": str(arrays_path),
         "plot_path": str(plot_path) if plot_path is not None else None,
     }
+    if window is not None:
+        summary["window"] = window
+    if step is not None:
+        summary["step"] = step
+    return summary
 
 
 def write_plot(path: Path, scenario: SyntheticP2Scenario, result: P2Result) -> None:
@@ -239,11 +251,20 @@ def write_plot(path: Path, scenario: SyntheticP2Scenario, result: P2Result) -> N
 def run_experiment(args: argparse.Namespace) -> P2ExperimentArtifacts:
     """Run one P2 experiment and persist artifacts."""
     scenario = generate_scenario(args.scale, args.seed)
-    result = P2MILPSolver(
-        scenario,
-        time_limit=args.time_limit,
-        mip_gap=args.mip_gap,
-    ).solve()
+    if args.method == "rolling":
+        result = P2RollingSolver(
+            scenario,
+            window=args.window,
+            step=args.step,
+            time_limit=args.time_limit,
+            mip_gap=args.mip_gap,
+        ).solve()
+    else:
+        result = P2MILPSolver(
+            scenario,
+            time_limit=args.time_limit,
+            mip_gap=args.mip_gap,
+        ).solve()
     return write_artifacts(args, scenario, result)
 
 
@@ -255,14 +276,24 @@ def write_artifacts(
     """Persist arrays, summary JSON, and optional plot."""
     args.out_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
-    stem = f"p2_{args.scale}_seed{args.seed}_{stamp}"
+    method_prefix = "" if args.method == "milp" else f"{args.method}_"
+    stem = f"p2_{method_prefix}{args.scale}_seed{args.seed}_{stamp}"
     arrays_path = args.out_dir / f"{stem}.npz"
     summary_path = args.out_dir / f"{stem}.json"
     plot_path = None if args.no_plot else args.out_dir / f"{stem}.png"
     write_arrays(arrays_path, scenario, result)
     if plot_path is not None:
         write_plot(plot_path, scenario, result)
-    summary = summary_dict(args.scale, scenario, result, arrays_path, plot_path)
+    summary = summary_dict(
+        args.method,
+        args.scale,
+        scenario,
+        result,
+        arrays_path,
+        plot_path,
+        window=args.window if args.method == "rolling" else None,
+        step=args.step if args.method == "rolling" else None,
+    )
     summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     return P2ExperimentArtifacts(
         str(arrays_path),

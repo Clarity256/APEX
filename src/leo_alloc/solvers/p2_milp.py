@@ -123,6 +123,7 @@ class P2MILPSolver:
         scenario: _ScenarioLike,
         time_limit: float = 3600.0,
         mip_gap: float = 0.01,
+        initial_x: FloatArray | None = None,
     ) -> None:
         """
         Initialize a P2 MILP solver.
@@ -135,10 +136,17 @@ class P2MILPSolver:
             Solver wall-clock limit in seconds.
         mip_gap : float, default=0.01
             Relative MIP gap target passed to HiGHS.
+        initial_x : ndarray, optional
+            Previous committed association with shape ``(S, C)``. When provided,
+            ``h[:, 0]`` counts switches from ``initial_x`` into the first slot of
+            this MILP window. When omitted, ``h[:, 0]`` is fixed to zero.
         """
         self.data = _scenario_data(scenario)
         self.time_limit = _positive_float(time_limit, "time_limit")
         self.mip_gap = _nonnegative_float(mip_gap, "mip_gap")
+        self.initial_x = (
+            _initial_association(initial_x, self.data) if initial_x is not None else None
+        )
         self.index = _Index(self.data.S, self.data.C, self.data.K)
         self.capacity_proxy = _capacity_proxy(self.data)
 
@@ -185,8 +193,9 @@ class P2MILPSolver:
             for c in range(self.data.C):
                 for k in range(self.data.K):
                     upper[self.index.x(s, c, k)] = self.data.v[s, c, k]
-        for c in range(self.data.C):
-            upper[self.index.h(c, 0)] = 0.0
+        if self.initial_x is None:
+            for c in range(self.data.C):
+                upper[self.index.h(c, 0)] = 0.0
         return Bounds(lower, upper)
 
     def _constraints(self) -> list[LinearConstraint]:
@@ -210,9 +219,23 @@ class P2MILPSolver:
         return LinearConstraint(matrix.tocsr(), rhs, rhs)
 
     def _handover_constraints(self) -> LinearConstraint:
-        rows = 2 * self.data.S * self.data.C * max(self.data.K - 1, 0)
+        boundary_count = 1 if self.initial_x is not None else 0
+        rows = 2 * self.data.S * self.data.C * (max(self.data.K - 1, 0) + boundary_count)
         matrix = lil_matrix((rows, self.index.total_size), dtype=np.float64)
+        upper = np.zeros(rows, dtype=np.float64)
         row = 0
+        if self.initial_x is not None:
+            for s in range(self.data.S):
+                for c in range(self.data.C):
+                    previous = self.initial_x[s, c]
+                    matrix[row, self.index.x(s, c, 0)] = 1.0
+                    matrix[row, self.index.h(c, 0)] = -1.0
+                    upper[row] = previous
+                    row += 1
+                    matrix[row, self.index.x(s, c, 0)] = -1.0
+                    matrix[row, self.index.h(c, 0)] = -1.0
+                    upper[row] = -previous
+                    row += 1
         for s in range(self.data.S):
             for c in range(self.data.C):
                 for k in range(1, self.data.K):
@@ -225,13 +248,13 @@ class P2MILPSolver:
                     matrix[row, self.index.h(c, k)] = -1.0
                     row += 1
         lower = np.full(rows, -np.inf, dtype=np.float64)
-        upper = np.zeros(rows, dtype=np.float64)
         return LinearConstraint(matrix.tocsr(), lower, upper)
 
     def _budget_constraints(self) -> LinearConstraint:
         matrix = lil_matrix((self.data.C, self.index.total_size), dtype=np.float64)
+        first_handover_slot = 0 if self.initial_x is not None else 1
         for c in range(self.data.C):
-            for k in range(1, self.data.K):
+            for k in range(first_handover_slot, self.data.K):
                 matrix[c, self.index.h(c, k)] = 1.0
         lower = np.full(self.data.C, -np.inf, dtype=np.float64)
         return LinearConstraint(matrix.tocsr(), lower, self.data.H)
@@ -311,6 +334,13 @@ def _scenario_data(scenario: _ScenarioLike) -> _P2Data:
         eps=_positive_float(float(scenario.eps), "eps"),
         lambda_h=_nonnegative_float(float(scenario.lambda_h), "lambda_h"),
     )
+
+
+def _initial_association(initial_x: object, data: _P2Data) -> FloatArray:
+    array = _binary_array(initial_x, "initial_x", (data.S, data.C))
+    if not np.allclose(array.sum(axis=0), 1.0):
+        raise ValueError("initial_x must assign each cell to exactly one satellite")
+    return array
 
 
 def _capacity_proxy(data: _P2Data) -> FloatArray:

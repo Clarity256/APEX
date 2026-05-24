@@ -117,6 +117,37 @@ def test_visibility_forced_switch_consumes_budget() -> None:
     np.testing.assert_allclose(result.handover_per_cell[0], 1.0, atol=1e-8)
 
 
+def test_initial_association_boundary_switch_consumes_budget() -> None:
+    """A window boundary switch should be represented by h[:, 0] when initial_x is set."""
+    v = np.array([[[0.0]], [[1.0]]], dtype=np.float64)
+    initial_x = np.array([[1.0], [0.0]], dtype=np.float64)
+    scenario = _base_scenario(v=v, handover_budget=np.array([1.0], dtype=np.float64))
+
+    result = P2MILPSolver(scenario, time_limit=10.0, initial_x=initial_x).solve()
+
+    assert not result.status.startswith("infeasible")
+    assert result.x.shape == (scenario.S, scenario.C, scenario.K)
+    assert result.h.shape == (scenario.C, scenario.K)
+    np.testing.assert_allclose(result.x.sum(axis=0), 1.0, atol=1e-8)
+    assert np.all(result.x <= scenario.v + 1e-8)
+    assert result.handover_per_cell[0] <= scenario.H[0] + 1e-8
+    np.testing.assert_allclose(result.x[1, 0, 0], 1.0, atol=1e-8)
+    np.testing.assert_allclose(result.h[0, 0], 1.0, atol=1e-8)
+    np.testing.assert_allclose(result.handover_per_cell[0], 1.0, atol=1e-8)
+
+
+def test_initial_association_boundary_switch_reports_infeasible_without_budget() -> None:
+    """A required boundary handover must not be hidden when no budget remains."""
+    v = np.array([[[0.0]], [[1.0]]], dtype=np.float64)
+    initial_x = np.array([[1.0], [0.0]], dtype=np.float64)
+    scenario = _base_scenario(v=v, handover_budget=np.array([0.0], dtype=np.float64))
+
+    result = P2MILPSolver(scenario, time_limit=10.0, initial_x=initial_x).solve()
+
+    assert result.status.startswith("infeasible")
+    assert float("-inf") == result.U
+
+
 def test_invisibility_reports_infeasible_when_budget_exhausted() -> None:
     """Budget exhaustion plus visibility break must not silently violate H_c."""
     v = np.array([[[1.0, 0.0, 0.0]], [[0.0, 1.0, 1.0]]], dtype=np.float64)
