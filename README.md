@@ -110,6 +110,12 @@ Run the P2 synthetic association experiment:
 .venv/bin/python scripts/run_p2_experiments.py --scale medium --method rolling --window 5 --step 3
 ```
 
+Run the generated-scenario P2 L1-vs-L2 benchmark:
+
+```bash
+.venv/bin/python scripts/run_p2_benchmark.py --scale stress --instances 3
+```
+
 Artifacts are written under `results/` as JSON summaries, compressed NumPy
 arrays, and PNG diagnostics.
 
@@ -122,7 +128,7 @@ src/leo_alloc/
     p1_dual.py     # L2 dual decomposition approximation
     p2_milp.py     # P2 offline MILP association solver
     p2_rolling.py  # P2 rolling-window decomposition solver
-  scenario/        # scenario interfaces and future generators
+  scenario/        # validated generated scenarios and channel/visibility models
   rl/              # P3 online policy components, planned
   utils/           # configuration and logging helpers
 
@@ -130,6 +136,7 @@ scripts/
   run_p1_experiments.py
   run_p1_benchmark.py
   run_p2_experiments.py
+  run_p2_benchmark.py
 
 doc/
   00_research_context.md
@@ -145,7 +152,7 @@ doc/
 ```bash
 .venv/bin/python -m pytest -q
 .venv/bin/python -m ruff check src tests scripts
-.venv/bin/python -m ruff format --check src tests scripts/run_p1_experiments.py scripts/run_p1_benchmark.py scripts/run_p2_experiments.py
+.venv/bin/python -m ruff format --check src tests scripts/run_p1_experiments.py scripts/run_p1_benchmark.py scripts/run_p2_experiments.py scripts/run_p2_benchmark.py
 .venv/bin/python -m mypy src/leo_alloc
 ```
 

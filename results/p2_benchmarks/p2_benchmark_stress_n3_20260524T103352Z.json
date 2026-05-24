@@ -1,0 +1,28 @@
+{
+  "scenario": "p2_stress",
+  "config": {
+    "scale": "stress",
+    "S": 8,
+    "C": 30,
+    "K": 50,
+    "M": 10,
+    "H_per_cell": 12,
+    "window": 10,
+    "step": 5,
+    "demand_base_high_mbps": 50.0,
+    "demand_base_low_mbps": 10.0,
+    "mismatch_ratio": 0.3
+  },
+  "instances": 3,
+  "gap_median": -0.00040000000000000094,
+  "gap_p95": 0.004459999999999999,
+  "gap_max": 0.004999999999999999,
+  "speedup_median": 1.457265878676275,
+  "speedup_p05": 0.66390488411118,
+  "milp_time_median_s": 1.3395786659966689,
+  "rolling_time_median_s": 1.138825165995513,
+  "milp_handover_total_mean": 107.0,
+  "rolling_handover_total_mean": 117.0,
+  "milp_xi_mean": 0.9998530432371909,
+  "rolling_xi_mean": 0.9998530432371909
+}
