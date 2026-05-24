@@ -61,6 +61,7 @@ Latest committed benchmark summaries:
 | P2 medium, seed 0 | optimal, total handovers `10`, max per-cell handovers `1 / 3` |
 | P2 stress L1/L2/L3, 3 instances | DP gap `0`, DP median speedup `5.4x`, rolling median speedup `1.7x` |
 | P2 proxy calibration toy overloaded, 18 oracle solves | median abs error `0.0367`, p95 abs error `0.209`, corr `0.398` |
+| P2 proxy calibration expanded, 273 oracle solves | medium/stress transition load has highest p95 abs error, about `0.64` |
 
 ## Quick Start
 
