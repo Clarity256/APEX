@@ -60,6 +60,7 @@ Latest committed benchmark summaries:
 | P2 toy, seed 0 | optimal, total handovers `5`, max per-cell handovers `1 / 2` |
 | P2 medium, seed 0 | optimal, total handovers `10`, max per-cell handovers `1 / 3` |
 | P2 stress L1/L2/L3, 3 instances | DP gap `0`, DP median speedup `5.4x`, rolling median speedup `1.7x` |
+| P2 proxy calibration toy overloaded, 18 oracle solves | median abs error `0.0367`, p95 abs error `0.209`, corr `0.398` |
 
 ## Quick Start
 
@@ -118,6 +119,12 @@ Run the generated-scenario P2 L1/L2/L3 benchmark:
 .venv/bin/python scripts/run_p2_benchmark.py --scale stress --instances 3
 ```
 
+Calibrate the P2 capacity proxy against the P1 CVX oracle:
+
+```bash
+.venv/bin/python scripts/run_p2_proxy_calibration.py --scale toy --instances 3 --slots-per-instance 3 --assignments-per-slot 2 --demand-multiplier 100
+```
+
 Artifacts are written under `results/` as JSON summaries, compressed NumPy
 arrays, and PNG diagnostics.
 
@@ -140,6 +147,7 @@ scripts/
   run_p1_benchmark.py
   run_p2_experiments.py
   run_p2_benchmark.py
+  run_p2_proxy_calibration.py
 
 doc/
   00_research_context.md

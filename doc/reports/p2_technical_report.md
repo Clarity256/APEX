@@ -210,6 +210,50 @@ Interpretation:
   This is useful for validating hard budgets, but future experiments should add
   more overloaded P2 scenarios for stronger fairness separation.
 
+## Initial Proxy Calibration
+
+The first calibration script is now implemented at
+`scripts/run_p2_proxy_calibration.py`. It samples visible P2 associations,
+evaluates the P2 `capacity_proxy`, then calls `P1CVXSolver` on the same
+slow-slot association to obtain the oracle `xi`.
+
+Committed overloaded toy artifact set:
+
+- `results/p2_proxy_calibration/p2_proxy_calibration_toy_n18_20260524T125458Z.csv`
+- `results/p2_proxy_calibration/p2_proxy_calibration_toy_n18_20260524T125458Z.json`
+- `results/p2_proxy_calibration/p2_proxy_calibration_toy_n18_20260524T125458Z.md`
+- `results/p2_proxy_calibration/p2_proxy_calibration_toy_n18_20260524T125458Z.png`
+
+Calibration settings:
+
+- `S = 3`, `C = 5`, `K = 8`, `M = 10`.
+- 3 scenarios, 3 sampled slow slots per scenario, 2 sampled assignments per slot.
+- 18 P1 oracle solves and 90 cell-level samples.
+- demand multiplier `100`, used to expose overloaded behavior.
+
+Summary:
+
+| Metric | Value |
+|---|---:|
+| proxy xi mean | `0.09906` |
+| oracle xi mean | `0.11953` |
+| mean signed error | `-0.02047` |
+| median absolute error | `0.03669` |
+| p95 absolute error | `0.20911` |
+| max absolute error | `0.27038` |
+| overestimate rate | `0.4667` |
+| underestimate rate | `0.5333` |
+| Pearson correlation | `0.3981` |
+
+Interpretation:
+
+- The proxy is directionally useful but not yet paper-grade calibrated.
+- Mean signed error is negative, so the current proxy slightly underestimates
+  P1 oracle satisfaction on this overloaded toy sample.
+- The p95 error and modest correlation show that P2 claims should keep the
+  "linear surrogate" qualifier until broader calibration and possible proxy
+  correction are completed.
+
 ## Completion Assessment
 
 P2 is considered complete for:
@@ -223,7 +267,7 @@ P2 is considered complete for:
 
 P2 is not yet complete for final paper claims until:
 
-- the capacity proxy is calibrated against P1 CVX outputs,
+- the capacity proxy is calibrated against P1 CVX outputs across larger regimes,
 - larger stress sweeps are run with more seeds and load regimes,
 - rolling-window budget policies are compared,
 - the distinction between optimized linear score and reported log utility is
@@ -232,10 +276,11 @@ P2 is not yet complete for final paper claims until:
 
 ## Recommended Next Work
 
-1. Add `run_p2_proxy_calibration.py` to compare P2 proxy `xi` against P1 CVX
-   `xi` for sampled associations.
-2. Run P2 benchmarks with more seeds and at least two demand-pressure regimes.
-3. Treat `P2DPSolver` as the default label generator for P3 while preserving
+1. Extend proxy calibration to medium/stress scales and multiple demand
+   multipliers.
+2. Use the calibration residuals to decide whether the proxy needs a correction
+   model before final paper experiments.
+3. Run P2 benchmarks with more seeds and at least two demand-pressure regimes.
+4. Treat `P2DPSolver` as the default label generator for P3 while preserving
    `P2MILPSolver` as the audit baseline.
-4. Add rolling-window ablations for `window`, `step`, and budget policy.
-5. Begin P3 data generation only after the proxy-calibration report is in place.
+5. Add rolling-window ablations for `window`, `step`, and budget policy.

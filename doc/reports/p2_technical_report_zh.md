@@ -212,6 +212,48 @@ stress 场景设置：
   hard handover budget，而不是强资源拥塞下的公平性差异。后续应加入更
   overloaded 的 P2 场景。
 
+## 初始 Proxy Calibration
+
+当前已经新增校准脚本：`scripts/run_p2_proxy_calibration.py`。该脚本会
+采样满足可见性的 P2 归属，先计算 P2 `capacity_proxy`，再对同一个慢时隙
+归属调用 `P1CVXSolver` 得到 oracle `xi`，最后统计二者误差。
+
+已提交 overloaded toy artifact：
+
+- `results/p2_proxy_calibration/p2_proxy_calibration_toy_n18_20260524T125458Z.csv`
+- `results/p2_proxy_calibration/p2_proxy_calibration_toy_n18_20260524T125458Z.json`
+- `results/p2_proxy_calibration/p2_proxy_calibration_toy_n18_20260524T125458Z.md`
+- `results/p2_proxy_calibration/p2_proxy_calibration_toy_n18_20260524T125458Z.png`
+
+校准设置：
+
+- `S = 3`，`C = 5`，`K = 8`，`M = 10`。
+- 3 个场景，每个场景采样 3 个慢时隙，每个慢时隙采样 2 个归属。
+- 共 18 次 P1 oracle solve，90 个 cell-level 样本。
+- demand multiplier 为 `100`，用于暴露 overloaded 行为。
+
+汇总结果：
+
+| 指标 | 数值 |
+|---|---:|
+| proxy xi mean | `0.09906` |
+| oracle xi mean | `0.11953` |
+| mean signed error | `-0.02047` |
+| median absolute error | `0.03669` |
+| p95 absolute error | `0.20911` |
+| max absolute error | `0.27038` |
+| overestimate rate | `0.4667` |
+| underestimate rate | `0.5333` |
+| Pearson correlation | `0.3981` |
+
+结果解释：
+
+- 当前 proxy 有一定方向性，但还不能视为 paper-grade calibrated。
+- mean signed error 为负，说明在这组 overloaded toy 样本上 proxy 略微
+  低估 P1 oracle satisfaction。
+- p95 error 和相关系数说明，P2 结论在现阶段仍应保留 “linear surrogate”
+  限定，后续需要扩大校准范围并考虑 proxy correction。
+
 ## 完成度判断
 
 P2 当前可以认为完成了以下目标：
@@ -225,7 +267,7 @@ P2 当前可以认为完成了以下目标：
 
 P2 尚未达到最终论文实验闭环的部分包括：
 
-- capacity proxy 仍需与 P1 CVX oracle 做系统校准。
+- capacity proxy 仍需在更多尺度和负载等级上与 P1 CVX oracle 做系统校准。
 - 需要更多随机种子和不同负载等级的 benchmark。
 - rolling window 的 `window`、`step`、budget policy 需要消融。
 - 论文中需要明确区分“实际优化的线性 score”和“报告的 log utility”。
@@ -233,10 +275,9 @@ P2 尚未达到最终论文实验闭环的部分包括：
 
 ## 建议下一步
 
-1. 新增 `run_p2_proxy_calibration.py`，采样 association 并比较 P2 proxy
-   `xi` 与 P1 CVX `xi`。
-2. 扩展 P2 benchmark 到更多 seeds 和至少两个 demand pressure regime。
-3. 将 `P2DPSolver` 作为 P3 label generator 默认方案，同时保留
+1. 将 proxy calibration 扩展到 medium/stress scale 和多个 demand multiplier。
+2. 根据校准残差判断是否需要引入 proxy correction model。
+3. 扩展 P2 benchmark 到更多 seeds 和至少两个 demand pressure regime。
+4. 将 `P2DPSolver` 作为 P3 label generator 默认方案，同时保留
    `P2MILPSolver` 作为 audit baseline。
-4. 对 rolling window 的 `window`、`step` 和 budget policy 做消融实验。
-5. 在进入 P3 大规模训练前，先完成 P2 proxy calibration report。
+5. 对 rolling window 的 `window`、`step` 和 budget policy 做消融实验。
