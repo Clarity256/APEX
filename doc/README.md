@@ -35,8 +35,10 @@ doc/
 
 ## 当前技术报告
 
-- `reports/p1_technical_report.md` — P1 凸优化内核与对偶加速结论
-- `reports/p2_technical_report.md` — P2 硬切换预算归属优化结论
+- `reports/p1_technical_report.md` — P1 convex allocation report, English
+- `reports/p1_technical_report_zh.md` — P1 凸优化内核与对偶加速报告，中文
+- `reports/p2_technical_report.md` — P2 handover-constrained association report, English
+- `reports/p2_technical_report_zh.md` — P2 硬切换预算归属优化报告，中文
 
 ## 推荐阅读顺序
 
