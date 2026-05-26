@@ -12,6 +12,17 @@ import numpy as np
 from cvxpy.error import SolverError
 from numpy.typing import NDArray
 
+try:
+    import mosek as _mosek
+except ImportError:
+
+    class _OptionalMosekError(Exception):
+        """Placeholder when the optional MOSEK package is absent."""
+
+    _MOSEK_ERROR_TYPE: type[BaseException] = _OptionalMosekError
+else:
+    _MOSEK_ERROR_TYPE = _mosek.Error
+
 cp: Any = _cp
 FloatArray = NDArray[np.float64]
 BoolArray = NDArray[np.bool_]
@@ -168,7 +179,7 @@ class P1CVXSolver:
     def _solve_with_fallbacks(self) -> tuple[str, float]:
         start_time = perf_counter()
         last_status = "not_run"
-        last_error: SolverError | None = None
+        last_error: BaseException | None = None
         for solver_name in self._candidate_solvers():
             try:
                 self.prob.solve(
@@ -176,7 +187,7 @@ class P1CVXSolver:
                     warm_start=True,
                     ignore_dpp=not self.use_dpp,
                 )
-            except SolverError as exc:
+            except (SolverError, _MOSEK_ERROR_TYPE) as exc:
                 last_error = exc
                 continue
             last_status = str(self.prob.status)
