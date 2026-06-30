@@ -1,0 +1,63 @@
+% !TeX program = pdflatex
+% !BIB program = bibtex
+
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Two-Timescale Fair Downlink Resource Allocation with Handover Budgets in LEO Satellite Networks}
+
+\author{
+\IEEEauthorblockN{First Author, Second Author, and Third Author}
+\IEEEauthorblockA{
+\textit{Department or Laboratory}\\
+\textit{University or Organization}\\
+City, Country\\
+email@example.com}
+}
+
+\maketitle
+
+\begin{abstract}
+Low Earth orbit (LEO) direct-access systems must allocate scarce downlink
+resources while managing frequent satellite-cell association changes. Existing
+work often optimizes radio resources or handovers separately, or handles
+handover through soft penalties. This paper studies a two-timescale optimization
+framework for fair LEO downlink service under hard per-cell handover budgets.
+At the fast timescale, physical resource blocks and transmit power are jointly
+allocated for a fixed satellite-cell association through a convex proportional
+fairness problem. At the slow timescale, satellite-cell associations are
+selected over a visibility horizon while respecting explicit handover budgets.
+The resulting framework supports exact small-scale optimization and scalable
+rolling-horizon approximation. The evaluation is designed to quantify served
+demand, proportional fairness, worst-cell satisfaction, handover compliance, and
+solver runtime.
+\end{abstract}
+
+\begin{IEEEkeywords}
+LEO satellite networks, resource allocation, handover budget, convex
+optimization, mixed-integer programming, proportional fairness
+\end{IEEEkeywords}
+
+\input{sections/introduction}
+\input{sections/system_model}
+\input{sections/problem_formulation}
+\input{sections/proposed_algorithm}
+\input{sections/evaluation}
+\input{sections/conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{../bib/leo_references}
+
+\end{document}

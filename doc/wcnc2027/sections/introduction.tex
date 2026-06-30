@@ -1,0 +1,34 @@
+% !TeX root = ../main.tex
+
+\section{Introduction}
+
+Low Earth orbit (LEO) satellite networks are a promising architecture for
+wide-area direct-access connectivity, but their downlink scheduling problem is
+shaped by two coupled sources of variation. At the fast timescale, cells compete
+for physical resource blocks (PRBs) and satellite transmit power under changing
+demand. At the slow timescale, satellite visibility evolves with orbital motion,
+which forces satellite-cell association decisions and may trigger frequent
+handovers.
+
+Existing LEO downlink allocation studies have emphasized fair resource
+balancing across large service regions~\cite{leyva2023continent}, while
+handover-aware formulations often use soft switching penalties
+\cite{afif2025handover}. These approaches are valuable baselines, but two
+practical gaps remain. First, PRB and power allocation should be optimized
+jointly when evaluating fixed associations. Second, a soft handover penalty does
+not guarantee that each cell stays within a deployment-level handover budget.
+This motivates a two-timescale formulation that combines fast convex resource
+allocation with slow hard-budget association optimization.
+
+This paper focuses on the optimization core and leaves online learning under
+uncertain demand as future work. The intended contributions are:
+\begin{itemize}
+\item a fast-timescale convex PRB--power allocation model for fixed LEO
+associations;
+\item a slow-timescale satellite-cell association formulation with hard
+per-cell handover budgets;
+\item exact and rolling-horizon solution methods that trade optimality for
+runtime;
+\item a reproducible simulation plan measuring throughput, proportional
+fairness, worst-cell satisfaction, handover count, and solve time.
+\end{itemize}

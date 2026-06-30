@@ -1,0 +1,57 @@
+% !TeX root = ../main.tex
+
+\section{Problem Formulation}
+
+The full problem couples binary association decisions with continuous PRB and
+power allocation. Directly solving this mixed-integer nonlinear program at paper
+scale is not practical, so we expose its structure through a two-timescale
+decomposition.
+
+\subsection{Fast Allocation for Fixed Association}
+
+Given $x_{s,c,k}$, the fast-timescale problem optimizes PRB and power variables
+for each slow slot. Its objective is proportional fairness:
+\begin{equation}
+    \max_{\{n,p,z,\xi\}}
+    \sum_{c \in \mathcal{C}} \log(\epsilon + \xi_{c,k}).
+\end{equation}
+The constraints are
+\begin{align}
+    &\sum_{c \in \mathcal{C}} n_{s,c,k,m} \leq N_s,
+    &&\forall s,m,\\
+    &\sum_{c \in \mathcal{C}} p_{s,c,k,m} \leq P_s,
+    &&\forall s,m,\\
+    &n_{s,c,k,m}=p_{s,c,k,m}=0,
+    &&\text{if } x_{s,c,k}=0,\\
+    &0 \leq z_{c,k,m} \leq a_{c,k,m},
+    &&\forall c,m.
+\end{align}
+The rate expression is handled in perspective form, which makes the rate
+constraint concave in $(n,p)$ and yields a disciplined convex program for fixed
+association.
+
+\subsection{Slow Association with Handover Budgets}
+
+At the slow timescale, the optimizer selects $x_{s,c,k}$ subject to visibility,
+single-association, and handover constraints:
+\begin{align}
+    &\sum_{s \in \mathcal{S}} x_{s,c,k}=1,
+    &&\forall c,k,\\
+    &x_{s,c,k}\leq v_{s,c,k},
+    &&\forall s,c,k,\\
+    &h_{c,k}\geq x_{s,c,k}-x_{s,c,k-1},
+    &&\forall s,c,k>1,\\
+    &h_{c,k}\geq x_{s,c,k-1}-x_{s,c,k},
+    &&\forall s,c,k>1,\\
+    &\sum_{k>1} h_{c,k}\leq H_c,
+    &&\forall c.
+\end{align}
+The association objective uses a calibrated utility proxy
+$q_{s,c,k}$, obtained from channel quality, expected demand load, and the fast
+allocation kernel. This gives the slow problem
+\begin{equation}
+    \max_{\{x,h\}}
+    \sum_{c,k,s} q_{s,c,k} x_{s,c,k}
+    - \lambda_h \sum_{c,k} h_{c,k},
+\end{equation}
+while retaining the hard budget constraint for every cell.

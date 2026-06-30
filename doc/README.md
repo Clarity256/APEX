@@ -30,8 +30,23 @@ doc/
 ├── 06_coding_conventions.md        代码规范与项目结构
 ├── 07_vibe_coding_guide.md         AI 协作开发方法论
 ├── 08_environment_setup.md         环境配置与手动安装项
+├── bib/                            英文/中文论文共享 BibTeX 文献库
+├── figures/                        论文共享图表资源
+├── latex_templates/                官方 LaTeX 模板归档
+├── wcnc2027/                       IEEE 英文会议论文工作目录
+├── wcnc2027_zh/                    中文论文草稿工作目录
 └── reports/                        P1/P2 当前实现技术报告
 ```
+
+## 论文写作目录
+
+- `wcnc2027/` — IEEE 英文稿，使用 `IEEEtran`，主编译链为
+  PdfLaTeX + BibTeX。
+- `wcnc2027_zh/` — 中文稿，使用 `ctexart`，主编译链为 XeLaTeX +
+  BibTeX。
+- `bib/leo_references.bib` — 两个论文目录共享的 BibTeX 数据库。
+- `figures/common/` — 两个论文目录共享的图表资源。
+- `latex_templates/ieee/` — IEEE 官方模板和 ZIP 归档，不作为日常写作目录。
 
 ## 当前技术报告
 

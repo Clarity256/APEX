@@ -1,0 +1,29 @@
+% !TeX root = ../main.tex
+
+\section{系统模型}
+
+考虑由卫星集合 $\mathcal{S}$ 和小区集合 $\mathcal{C}$ 构成的低轨卫星下行系统。
+时间被划分为慢时隙 $k\in\mathcal{K}$，每个慢时隙进一步包含快时隙
+$m\in\mathcal{M}$。二元变量 $v_{s,c,k}$ 表示卫星 $s$ 在慢时隙 $k$ 是否可见
+小区 $c$。归属变量 $x_{s,c,k}\in\{0,1\}$ 表示小区 $c$ 是否由卫星 $s$ 服务。
+
+在给定归属的条件下，系统在快时隙内决定 PRB 分配 $n_{s,c,k,m}$ 和功率分配
+$p_{s,c,k,m}$。设 $a_{c,k,m}$ 为业务到达量，$z_{c,k,m}$ 为实际服务量，则
+慢时隙需求满足率可写为
+\begin{equation}
+    \xi_{c,k}
+    =
+    \frac{\sum_{m\in\mathcal{M}} z_{c,k,m}}
+    {\sum_{m\in\mathcal{M}} a_{c,k,m} + \epsilon_a}.
+\end{equation}
+
+本文采用对数效用刻画比例公平性：
+\begin{equation}
+    U = \sum_{c\in\mathcal{C}}\sum_{k\in\mathcal{K}}
+    \log(\epsilon+\xi_{c,k}).
+\end{equation}
+
+令 $h_{c,k}$ 表示小区 $c$ 在相邻慢时隙之间是否发生切换，逐小区硬切换预算约束为
+\begin{equation}
+    \sum_{k>1} h_{c,k} \leq H_c,\quad \forall c\in\mathcal{C}.
+\end{equation}

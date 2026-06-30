@@ -1,0 +1,43 @@
+% !TeX program = xelatex
+% !BIB program = bibtex
+
+\documentclass[UTF8,a4paper,11pt]{ctexart}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\graphicspath{{figures/}{../figures/common/}}
+
+\title{面向低轨卫星下行网络的切换预算约束公平资源分配}
+\author{作者姓名}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+低轨卫星直连接入网络需要在动态可见性、有限无线资源和频繁切换之间进行权衡。
+本文围绕一个适合会议论文展开的核心问题：在快时隙联合分配物理资源块与功率，
+并在慢时隙优化卫星--小区归属，同时严格满足逐小区切换预算。该中文稿用于同步
+整理模型、算法和实验叙事，英文投稿版本以 IEEE WCNC 2027 模板为准。
+\end{abstract}
+
+\noindent\textbf{关键词：}低轨卫星网络；公平资源分配；切换预算；凸优化；混合整数规划
+
+\input{sections/introduction}
+\input{sections/system_model}
+\input{sections/problem_formulation}
+\input{sections/method}
+\input{sections/evaluation}
+\input{sections/conclusion}
+
+\bibliographystyle{gbt7714-numerical}
+\bibliography{../bib/leo_references}
+
+\end{document}

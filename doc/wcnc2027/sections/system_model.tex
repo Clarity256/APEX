@@ -1,0 +1,50 @@
+% !TeX root = ../main.tex
+
+\section{System Model}
+
+Consider a LEO constellation with satellite set $\mathcal{S}$ and cell set
+$\mathcal{C}$. Time is divided into slow slots $k \in \mathcal{K}$, and each
+slow slot contains fast slots $m \in \mathcal{M}$. Binary visibility
+$v_{s,c,k}$ indicates whether satellite $s$ can serve cell $c$ during slow slot
+$k$. The slow-timescale decision is the binary association
+$x_{s,c,k} \in \{0,1\}$, with each cell assigned to exactly one visible
+satellite.
+
+Each satellite $s$ has PRB budget $N_s$ and transmit-power budget $P_s$. During
+slow slot $k$, cell $c$ receives demand arrivals $a_{c,k,m}$ over fast slots.
+For a fixed slow-slot association, the fast allocator chooses PRB allocation
+$n_{s,c,k,m}$ and power allocation $p_{s,c,k,m}$. With channel gain
+$g_{s,c,k}$, the served demand is limited by the Shannon-type downlink rate
+\begin{equation}
+    r_{s,c,k,m}
+    =
+    n_{s,c,k,m} W
+    \log_2 \left(1 +
+    \frac{g_{s,c,k} p_{s,c,k,m}}
+    {n_{s,c,k,m} N_0 W}
+    \right),
+\end{equation}
+where $W$ is the bandwidth per PRB and $N_0$ is the noise spectral density.
+
+Let $z_{c,k,m}$ denote the served demand of cell $c$ in fast slot $m$. The
+slow-slot satisfaction rate is
+\begin{equation}
+    \xi_{c,k}
+    =
+    \frac{\sum_{m \in \mathcal{M}} z_{c,k,m}}
+    {\sum_{m \in \mathcal{M}} a_{c,k,m} + \epsilon_a},
+\end{equation}
+where $\epsilon_a$ avoids division by zero. Proportional fairness is represented
+by the log utility
+\begin{equation}
+    U = \sum_{c \in \mathcal{C}} \sum_{k \in \mathcal{K}}
+    \log(\epsilon + \xi_{c,k}),
+\end{equation}
+where $\epsilon > 0$ stabilizes zero-service cases.
+
+Handovers are counted per cell. Let $h_{c,k}$ indicate whether cell $c$ changes
+its serving satellite between slow slots $k-1$ and $k$. The deployment
+constraint is a hard budget:
+\begin{equation}
+    \sum_{k \in \mathcal{K}} h_{c,k} \leq H_c,\quad \forall c \in \mathcal{C}.
+\end{equation}

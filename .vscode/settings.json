@@ -1,0 +1,19 @@
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "make-current-dir",
+      "command": "/usr/bin/make",
+      "args": [],
+      "cwd": "%DIR%"
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "make-current-dir",
+      "tools": [
+        "make-current-dir"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "first"
+}

@@ -1,0 +1,40 @@
+% !TeX root = ../main.tex
+
+\section{Simulation Setup and Results}
+
+The evaluation will compare all methods on shared LEO downlink scenario
+instances. The planned baselines are nearest-visible-satellite association,
+best-channel association without handover control, soft handover-penalized
+association, full-horizon mixed-integer association, and rolling-horizon
+association. When the proxy is separable across cells, a dynamic-programming
+solver can also be included as an exact reference for the surrogate objective.
+
+\begin{table}[t]
+\caption{Primary Evaluation Metrics}
+\label{tab:metrics}
+\centering
+\begin{tabular}{ll}
+\toprule
+Metric & Purpose \\
+\midrule
+Mean satisfaction & Average served-demand ratio \\
+Fifth-percentile satisfaction & Worst-cell service quality \\
+Log utility & Proportional fairness \\
+Total served demand & System throughput \\
+Total handovers & Mobility overhead \\
+Budget violations & Hard-constraint feasibility \\
+Solve time & Algorithm scalability \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The main metrics are summarized in Table~\ref{tab:metrics}. The final WCNC
+claim should be limited to scenarios where the proposed method has zero
+avoidable handover-budget violations. Sensitivity studies should vary:
+\begin{itemize}
+\item demand scale and demand imbalance across cells;
+\item visibility density and minimum elevation threshold;
+\item handover budget $H_c$;
+\item rolling-window length and commit step;
+\item proxy calibration error relative to the inner convex allocator.
+\end{itemize}

@@ -1,0 +1,37 @@
+% !TeX root = ../main.tex
+
+\section{Proposed Method}
+
+\subsection{Inner Convex Resource Allocation}
+
+For every candidate association or calibration sample, the inner allocator
+solves the fixed-association PRB--power problem. The key modeling step is the
+perspective transformation of the rate term. In natural logarithm form,
+\begin{equation}
+    n \log \left(1 + \alpha p/n\right)
+    =
+    -\mathrm{rel\_entr}(n,n+\alpha p),
+\end{equation}
+which is concave in $(n,p)$. This enables a convex ground-truth evaluator for
+service satisfaction under fixed association.
+
+\subsection{Outer Handover-Constrained Optimization}
+
+The outer layer optimizes the association trajectory using the calibrated proxy
+$q_{s,c,k}$. For small and medium instances, we solve the binary problem as a
+mixed-integer program to obtain an offline benchmark. For larger horizons, we
+use a rolling-horizon variant: solve a shorter window, commit the leading
+slots, carry forward the last association, and update the remaining handover
+budget. This preserves hard handover feasibility while reducing solve time.
+
+\subsection{Algorithm Summary}
+
+The complete workflow is:
+\begin{enumerate}
+\item generate visibility, channel, demand, and handover-budget inputs;
+\item estimate $q_{s,c,k}$ using the inner PRB--power allocation kernel or a
+calibrated capacity proxy;
+\item solve the slow association problem exactly or with rolling horizon;
+\item evaluate the selected association with the same fast allocation kernel;
+\item report fairness, served demand, handovers, budget violations, and runtime.
+\end{enumerate}
